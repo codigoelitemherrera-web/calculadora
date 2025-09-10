@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora Móvil</title>
+    <style>
+        /* Estilos CSS */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .calculator {
+            width: 300px;
+            border-radius: 20px;
+            background-color: #333;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        .display {
+            background-color: #222;
+            color: white;
+            font-size: 3.5em;
+            text-align: right;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            overflow: hidden;
+            white-space: nowrap;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .btn {
+            background-color: #505050;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            font-size: 1.5em;
+            padding: 20px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: #616161;
+        }
+
+        .btn.operator {
+            background-color: #ff9500;
+        }
+
+        .btn.operator:hover {
+            background-color: #ffa520;
+        }
+
+        .btn.misc {
+            background-color: #d4d4d2;
+            color: black;
+        }
+
+        .btn.misc:hover {
+            background-color: #e0e0de;
+        }
+
+        .btn.zero {
+            grid-column: span 2;
+            border-radius: 40px;
+            text-align: left;
+            padding-left: 35px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculator">
+        <div class="display" id="display">0</div>
+        <div class="buttons">
+            <button class="btn misc" onclick="clearDisplay()">AC</button>
+            <button class="btn misc" onclick="toggleSign()">+/-</button>
+            <button class="btn misc" onclick="calculatePercentage()">%</button>
+            <button class="btn operator" onclick="setOperator('/')">÷</button>
+            <button class="btn" onclick="appendNumber('7')">7</button>
+            <button class="btn" onclick="appendNumber('8')">8</button>
+            <button class="btn" onclick="appendNumber('9')">9</button>
+            <button class="btn operator" onclick="setOperator('*')">×</button>
+            <button class="btn" onclick="appendNumber('4')">4</button>
+            <button class="btn" onclick="appendNumber('5')">5</button>
+            <button class="btn" onclick="appendNumber('6')">6</button>
+            <button class="btn operator" onclick="setOperator('-')">−</button>
+            <button class="btn" onclick="appendNumber('1')">1</button>
+            <button class="btn" onclick="appendNumber('2')">2</button>
+            <button class="btn" onclick="appendNumber('3')">3</button>
+            <button class="btn operator" onclick="setOperator('+')">+</button>
+            <button class="btn zero" onclick="appendNumber('0')">0</button>
+            <button class="btn" onclick="appendDecimal()">.</button>
+            <button class="btn operator" onclick="calculateResult()">=</button>
+        </div>
+    </div>
+
+    <script>
+        // Lógica de JavaScript
+        let display = document.getElementById('display');
+        let currentInput = '0';
+        let operator = null;
+        let previousInput = null;
+
+        function updateDisplay() {
+            display.innerText = currentInput;
+        }
+
+        function appendNumber(number) {
+            if (currentInput === '0') {
+                currentInput = number;
+            } else {
+                currentInput += number;
+            }
+            updateDisplay();
+        }
+
+        function appendDecimal() {
+            if (!currentInput.includes('.')) {
+                currentInput += '.';
+            }
+            updateDisplay();
+        }
+
+        function clearDisplay() {
+            currentInput = '0';
+            operator = null;
+            previousInput = null;
+            updateDisplay();
+        }
+
+        function toggleSign() {
+            currentInput = (parseFloat(currentInput) * -1).toString();
+            updateDisplay();
+        }
+
+        function calculatePercentage() {
+            currentInput = (parseFloat(currentInput) / 100).toString();
+            updateDisplay();
+        }
+
+        function setOperator(op) {
+            if (operator !== null) {
+                calculateResult();
+            }
+            previousInput = parseFloat(currentInput);
+            operator = op;
+            currentInput = '0';
+        }
+
+        function calculateResult() {
+            if (operator === null) return;
+            let current = parseFloat(currentInput);
+            let result;
+
+            switch (operator) {
+                case '+':
+                    result = previousInput + current;
+                    break;
+                case '-':
+                    result = previousInput - current;
+                    break;
+                case '*':
+                    result = previousInput * current;
+                    break;
+                case '/':
+                    result = previousInput / current;
+                    break;
+                default:
+                    return;
+            }
+
+            currentInput = result.toString();
+            operator = null;
+            previousInput = null;
+            updateDisplay();
+        }
+    </script>
+
+</body>
+</html>
+
